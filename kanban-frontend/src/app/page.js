@@ -7,13 +7,17 @@ import { PlusIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 
 export default function Home() {
-  const { activeBoard } = useSelector((state) => state.boards);
+  const { activeBoard, isSidebarOpen } = useSelector((state) => state.boards);
   const [showAddTask, setShowAddTask] = useState(false);
 
   return (
     <main className="flex h-screen bg-[#F4F7FD] dark:bg-[#20212C] text-[#20212C] dark:text-white">
       <Sidebar />
-      <div className="flex-1 flex flex-col ml-72 min-h-screen">
+      <div
+        className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out ${
+          isSidebarOpen ? "ml-72" : ""
+        }`}
+      >
         {/* Top Bar */}
         <div className="flex items-center justify-between px-10 py-6 border-b border-[#E4EBFA] dark:border-[#3E3F4E] bg-white dark:bg-[#2B2C37] shadow-sm min-h-[96px]">
           <h2 className="text-2xl font-bold tracking-wide text-[#20212C] dark:text-white">

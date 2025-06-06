@@ -5,10 +5,13 @@ import { DragDropContext } from "react-beautiful-dnd";
 import Column from "./Column";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { boardsApi } from "../api/kanban";
 
-export default function Board() {
-  const { activeBoard } = useSelector((state) => state.boards);
+export default function Board({ activeBoardId, boardsData }) {
   const [showAddColumn, setShowAddColumn] = useState(false);
+
+  const activeBoard = boardsData.find((board) => board.id === activeBoardId);
 
   if (!activeBoard) {
     return (
@@ -26,7 +29,7 @@ export default function Board() {
   return (
     <div className="flex-1 px-10 py-8 overflow-x-auto">
       <DragDropContext onDragEnd={() => {}}>
-        <div className="flex flex-row-reverse gap-8 min-h-[80vh] items-start">
+        <div className="flex flex-row-reverse gap-8 min-h-[80vh] items-start pl-16 min-w-0">
           {activeBoard.columns.map((column, idx) => (
             <Column key={column.id} column={column} colorIndex={idx} />
           ))}

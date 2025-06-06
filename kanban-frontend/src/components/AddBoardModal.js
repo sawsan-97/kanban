@@ -4,25 +4,30 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addBoard } from "@/store/boardsSlice";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { boardsApi } from "../api/kanban";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function AddBoardModal({ isOpen, onClose }) {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const [boardName, setBoardName] = useState("");
   const [columns, setColumns] = useState(["Todo", "Doing"]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newBoard = {
-      id: Date.now().toString(),
-      name: boardName,
-      columns: columns.map((name, index) => ({
-        id: `column-${index}`,
-        name,
-        tasks: [],
-      })),
-    };
-    dispatch(addBoard(newBoard));
-    onClose();
+    if (!boardName.trim()) {
+      alert("يرجى إدخال اسم اللوحة");
+      return;
+    }
+    boardsApi
+      .create({ name: boardName })
+      .then(() => {
+        queryClient.invalidateQueries(["boards"]);
+        onClose();
+      })
+      .catch(() => {
+        alert("حدث خطأ أثناء إضافة اللوحة");
+      });
   };
 
   const addColumn = () => {

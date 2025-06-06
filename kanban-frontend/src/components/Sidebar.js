@@ -12,6 +12,10 @@ import {
 import { SunIcon, MoonIcon } from "@heroicons/react/24/outline";
 import AddBoardModal from "./AddBoardModal";
 import { useTheme } from "next-themes";
+import BoardDropdown from "./BoardDropdown";
+import { useQuery } from "@tanstack/react-query";
+import { boardsApi } from "../api/kanban";
+import Board from "./Board";
 
 export default function Sidebar() {
   const dispatch = useDispatch();
@@ -20,6 +24,11 @@ export default function Sidebar() {
   );
   const [isAddBoardModalOpen, setIsAddBoardModalOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+  const [activeBoardId, setActiveBoardId] = useState(null);
+  const { data: boardsData = [], isLoading } = useQuery({
+    queryKey: ["boards"],
+    queryFn: () => boardsApi.getAll().then((res) => res.data),
+  });
 
   if (!isSidebarOpen) {
     return (
@@ -49,28 +58,33 @@ export default function Sidebar() {
             </span>
           </div>
           <div className="px-8 text-[#828FA3] text-xs mb-4 tracking-widest font-semibold text-left">
-            ALL BOARDS ({boards.length})
+            ALL BOARDS ({boardsData.length})
           </div>
           <nav className="flex flex-col gap-1 px-2">
-            {boards.map((board) => (
-              <button
-                key={board.id}
-                onClick={() => dispatch(setActiveBoard(board))}
-                className={`flex items-center gap-3 w-full text-left px-8 py-3 rounded-r-full transition-colors font-medium text-base group ${
-                  activeBoard?.id === board.id
-                    ? "bg-[#635FC7] text-white shadow-md"
-                    : "text-[#828FA3] hover:bg-[#A8A4FF]/10 hover:text-[#635FC7] dark:text-[#828FA3] dark:hover:bg-[#A8A4FF]/10 dark:hover:text-[#635FC7]"
-                }`}
-              >
-                <Squares2X2Icon
-                  className={`h-5 w-5 ${
-                    activeBoard?.id === board.id
-                      ? "text-white"
-                      : "text-[#635FC7]"
+            {boardsData.map((board) => (
+              <div key={board.id} className="flex items-center gap-2">
+                <button
+                  onClick={() => setActiveBoardId(board.id)}
+                  className={`flex-1 flex items-center gap-3 w-full text-left px-8 py-3 rounded-r-full transition-colors font-medium text-base group ${
+                    activeBoardId === board.id
+                      ? "bg-[#635FC7] text-white shadow-md"
+                      : "text-[#828FA3] hover:bg-[#A8A4FF]/10 hover:text-[#635FC7] dark:text-[#828FA3] dark:hover:bg-[#A8A4FF]/10 dark:hover:text-[#635FC7]"
                   }`}
+                >
+                  <Squares2X2Icon
+                    className={`h-5 w-5 ${
+                      activeBoardId === board.id
+                        ? "text-white"
+                        : "text-[#635FC7]"
+                    }`}
+                  />
+                  <span className="truncate text-left">{board.name}</span>
+                </button>
+                <BoardDropdown
+                  board={board}
+                  onEdit={() => alert("تعديل اللوحة")}
                 />
-                <span className="truncate text-left">{board.name}</span>
-              </button>
+              </div>
             ))}
             <button
               onClick={() => setIsAddBoardModalOpen(true)}
@@ -111,6 +125,19 @@ export default function Sidebar() {
         isOpen={isAddBoardModalOpen}
         onClose={() => setIsAddBoardModalOpen(false)}
       />
+
+      {/* Main Content */}
+      <div className="flex-1 flex items-center justify-center bg-[#F4F7FD] dark:bg-[#20212C]">
+        {!isLoading && boardsData.length > 0 ? (
+          <Board activeBoardId={activeBoardId} boardsData={boardsData} />
+        ) : (
+          <div className="text-center w-full">
+            <p className="mb-8 text-lg text-[#828FA3] dark:text-[#828FA3] font-medium">
+              This board is empty. Create a new column to get started.
+            </p>
+          </div>
+        )}
+      </div>
     </>
   );
 }
