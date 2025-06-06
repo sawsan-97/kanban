@@ -8,7 +8,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 export default function AddBoardModal({ isOpen, onClose }) {
   const dispatch = useDispatch();
   const [boardName, setBoardName] = useState("");
-  const [columns, setColumns] = useState(["Todo", "Done"]);
+  const [columns, setColumns] = useState(["Todo", "Doing"]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,67 +43,59 @@ export default function AddBoardModal({ isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-board-dark rounded-lg p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">Add New Board</h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
-          >
-            <XMarkIcon className="h-6 w-6" />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Board Name</label>
+      <div className="bg-[#2B2C37] rounded-2xl shadow-2xl w-[480px] max-w-full flex flex-col px-6 pt-8 pb-6">
+        <h2 className="text-2xl font-bold text-white mb-6">Add New Board</h2>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 pb-2">
+          <div>
+            <label className="block text-sm font-semibold text-white mb-2">
+              Board Name
+            </label>
             <input
               type="text"
               value={boardName}
               onChange={(e) => setBoardName(e.target.value)}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-board-dark"
-              placeholder="e.g. Project Board"
+              className="w-full p-3 rounded-lg border border-[#3E3F4E] bg-transparent text-white placeholder:text-[#828FA3] focus:outline-none focus:border-[#635FC7] transition mb-4"
+              placeholder="e.g. Web Design"
               required
             />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Columns</label>
-            {columns.map((column, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  value={column}
-                  onChange={(e) => updateColumn(index, e.target.value)}
-                  className="flex-1 p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-board-dark"
-                  placeholder="Column name"
-                  required
-                />
-                {columns.length > 1 && (
+            <label className="block text-sm font-semibold text-white mb-2">
+              Board Columns
+            </label>
+            <div className="flex flex-col gap-3 mb-4">
+              {columns.map((column, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={column}
+                    onChange={(e) => updateColumn(index, e.target.value)}
+                    className="flex-1 p-3 rounded-lg border border-[#3E3F4E] bg-transparent text-white placeholder:text-[#828FA3] focus:outline-none focus:border-[#635FC7] transition"
+                    placeholder="Column name"
+                    required
+                  />
                   <button
                     type="button"
                     onClick={() => removeColumn(index)}
-                    className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
+                    className="p-2 hover:bg-[#635FC7]/10 rounded-full"
+                    tabIndex={-1}
                   >
-                    <XMarkIcon className="h-5 w-5" />
+                    <XMarkIcon className="h-6 w-6 text-[#828FA3]" />
                   </button>
-                )}
-              </div>
-            ))}
+                </div>
+              ))}
+            </div>
             <button
               type="button"
               onClick={addColumn}
-              className="w-full p-2 bg-gray-100 dark:bg-gray-800 rounded-lg text-primary hover:bg-gray-200 dark:hover:bg-gray-700"
+              className="w-full py-3 bg-white text-[#635FC7] font-bold rounded-[20px] text-base hover:bg-[#A8A4FF]/30 transition mb-4"
             >
-              + Add Column
+              Add New Column +
             </button>
           </div>
-
           <button
             type="submit"
-            className="w-full p-2 bg-primary text-white rounded-lg hover:bg-primary-light"
+            className="w-full py-3 bg-[#635FC7] text-white font-bold rounded-[20px] text-base hover:bg-[#A8A4FF] transition shadow"
           >
-            Create Board
+            Create New Board
           </button>
         </form>
       </div>

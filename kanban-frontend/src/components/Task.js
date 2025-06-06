@@ -19,13 +19,13 @@ export default function Task({ task, index, columnId }) {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             onClick={() => setIsViewTaskModalOpen(true)}
-            className="bg-white dark:bg-[#2B2C37] p-6 rounded-xl shadow-md cursor-pointer hover:shadow-lg transition-shadow flex flex-col gap-2 min-h-[100px]"
+            className="bg-[#2B2C37] rounded-xl shadow-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col gap-2 p-6 min-h-[88px] border border-transparent hover:border-[#635FC7]"
           >
-            <h4 className="font-bold text-base text-[#20212C] dark:text-white mb-1 truncate">
+            <h4 className="font-bold text-base text-white mb-1 truncate">
               {task.title}
             </h4>
             {totalSubtasks > 0 && (
-              <p className="text-xs text-[#828FA3] dark:text-[#828FA3] font-medium">
+              <p className="text-xs text-[#828FA3] font-medium">
                 {completedSubtasks} of {totalSubtasks} subtasks
               </p>
             )}

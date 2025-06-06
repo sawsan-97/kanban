@@ -18,17 +18,39 @@ export default function Column({ column, colorIndex = 0 }) {
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
 
   return (
-    <div className="min-w-[280px] max-w-xs w-80 flex flex-col bg-[#E4EBFA] dark:bg-[#2B2C37] rounded-xl p-4 shadow-md">
-      <div className="flex items-center gap-2 mb-6 mt-2 px-2">
-        <span
-          className={`w-4 h-4 rounded-full ${
-            columnColors[colorIndex % columnColors.length]
-          }`}
-        ></span>
-        <h3 className="font-semibold text-xs tracking-widest uppercase text-[#828FA3] dark:text-[#828FA3]">
-          {column.name} ({column.tasks.length})
-        </h3>
-      </div>
+    <div className="min-w-[280px] max-w-xs w-80 flex flex-col bg-[#2B2C37] rounded-xl p-4 shadow-md">
+      {/* Header: Adjust direction based on column name language */}
+      {/^([A-Za-z0-9 _-]+)$/.test(column.name) ? (
+        <div
+          className="flex flex-row items-center gap-2 mb-6 mt-2 px-2"
+          dir="ltr"
+        >
+          <span
+            className={`w-3 h-3 rounded-full ${
+              columnColors[colorIndex % columnColors.length]
+            }`}
+          ></span>
+          <h3 className="font-semibold text-xs tracking-widest uppercase text-[#828FA3]">
+            {column.name}{" "}
+            <span className="font-normal">({column.tasks.length})</span>
+          </h3>
+        </div>
+      ) : (
+        <div
+          className="flex flex-row-reverse items-center gap-2 mb-6 mt-2 px-2"
+          dir="rtl"
+        >
+          <span
+            className={`w-3 h-3 rounded-full ${
+              columnColors[colorIndex % columnColors.length]
+            }`}
+          ></span>
+          <h3 className="font-semibold text-xs tracking-widest uppercase text-[#828FA3]">
+            {column.name}{" "}
+            <span className="font-normal">({column.tasks.length})</span>
+          </h3>
+        </div>
+      )}
       <Droppable droppableId={column.id}>
         {(provided) => (
           <div
@@ -50,7 +72,8 @@ export default function Column({ column, colorIndex = 0 }) {
       </Droppable>
       <button
         onClick={() => setIsAddTaskModalOpen(true)}
-        className="mt-6 flex items-center justify-center gap-2 bg-[#E4EBFA] dark:bg-[#2B2C37] border-2 border-dashed border-[#635FC7] text-[#635FC7] px-4 py-2 rounded-full hover:bg-[#A8A4FF]/10 dark:hover:bg-[#635FC7]/10 transition-colors font-semibold"
+        className="mt-6 flex items-center justify-center gap-2 bg-transparent border-none text-[#635FC7] px-4 py-2 rounded-full hover:bg-[#635FC7]/10 transition-colors font-semibold"
+        style={{ border: "none" }}
       >
         <PlusIcon className="h-5 w-5" />
         <span>Add Task</span>

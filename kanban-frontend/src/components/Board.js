@@ -24,18 +24,19 @@ export default function Board() {
   }
 
   return (
-    <div className="flex-1 p-8 overflow-x-auto">
+    <div className="flex-1 px-10 py-8 overflow-x-auto">
       <DragDropContext onDragEnd={() => {}}>
-        <div className="flex gap-8 min-h-[80vh]">
+        <div className="flex flex-row-reverse gap-8 min-h-[80vh] items-start">
           {activeBoard.columns.map((column, idx) => (
             <Column key={column.id} column={column} colorIndex={idx} />
           ))}
           <button
             onClick={() => setShowAddColumn(true)}
-            className="min-w-[280px] max-w-xs w-80 h-[80vh] flex flex-col items-center justify-center bg-[#E4EBFA] dark:bg-[#2B2C37] border-2 border-dashed border-[#635FC7] text-[#635FC7] rounded-xl hover:bg-[#A8A4FF]/10 dark:hover:bg-[#635FC7]/10 transition-colors font-semibold shadow-md"
+            className="min-w-[280px] max-w-xs w-80 h-[56px] mt-10 flex items-center justify-center bg-transparent border-none text-[#635FC7] text-lg font-bold rounded-[24px] hover:bg-[#635FC7]/10 transition-colors shadow-none outline-none"
+            style={{ border: "none" }}
           >
-            <PlusIcon className="h-8 w-8 mb-2" />
-            <span className="text-lg">+ Add New Column</span>
+            <PlusIcon className="h-6 w-6 mr-2" />
+            New Column
           </button>
         </div>
       </DragDropContext>
