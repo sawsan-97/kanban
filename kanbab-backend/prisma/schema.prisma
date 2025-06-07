@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Board {
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  columns   Column[]
+
+  @@map("boards")
+}
+
+model Column {
+  id      String @id @default(uuid())
+  name    String @db.VarChar(255)
+  order   Int
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  tasks   Task[]
+
+  @@map("columns")
+  @@index([boardId])
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  title       String    @db.VarChar(500)
+  description String?   @db.Text
+  order       Int
+  columnId    String
+  column      Column    @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  subtasks    Subtask[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("tasks")
+  @@index([columnId])
+}
+
+model Subtask {
+  id        String  @id @default(uuid())
+  title     String  @db.VarChar(500)
+  completed Boolean @default(false)
+  taskId    String
+  task      Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@map("subtasks")
+  @@index([taskId])
+}
