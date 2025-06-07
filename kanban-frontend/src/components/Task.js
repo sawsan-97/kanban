@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import ViewTaskModal from "./ViewTaskModal";
 
-export default function Task({ task, index, columnId }) {
+export default function Task({ task, index, columnId, columns }) {
   const [isViewTaskModalOpen, setIsViewTaskModalOpen] = useState(false);
   const completedSubtasks =
     task.subtasks?.filter((subtask) => subtask.completed).length || 0;
@@ -38,6 +38,7 @@ export default function Task({ task, index, columnId }) {
         onClose={() => setIsViewTaskModalOpen(false)}
         task={task}
         columnId={columnId}
+        columns={columns}
       />
     </>
   );

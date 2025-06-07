@@ -1,41 +1,65 @@
 "use client";
 
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addTask } from "@/store/boardsSlice";
 import { XMarkIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { tasksApi, subtasksApi } from "../api/kanban";
 
-export default function AddTaskModal({ isOpen, onClose, columnId }) {
+export default function AddTaskModal({
+  isOpen,
+  onClose,
+  columnId,
+  activeBoard,
+}) {
   const dispatch = useDispatch();
-  const { activeBoard } = useSelector((state) => state.boards);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [subtasks, setSubtasks] = useState([""]);
+  const queryClient = useQueryClient();
+
+  const addTaskMutation = useMutation({
+    mutationFn: (data) => tasksApi.create(data),
+    onSuccess: async (task) => {
+      if (subtasks.length > 0 && task?.data?.id) {
+        await Promise.all(
+          subtasks
+            .filter((subtask) => subtask.trim())
+            .map((subtask) =>
+              subtasksApi.create({
+                title: subtask,
+                completed: false,
+                taskId: task.data.id,
+              })
+            )
+        );
+      }
+      queryClient.invalidateQueries(["boards"]);
+      onClose();
+    },
+    onError: (error) => {
+      alert("حدث خطأ أثناء إضافة المهمة");
+      console.error("Error adding task:", error);
+    },
+  });
+
+  if (!activeBoard) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newTask = {
-      id: Date.now().toString(),
-      title,
-      description,
-      subtasks: subtasks
-        .filter((subtask) => subtask.trim())
-        .map((subtask) => ({
-          id: Date.now().toString() + Math.random(),
-          title: subtask,
-          completed: false,
-        })),
+    if (!title.trim() || !columnId) {
+      alert("يرجى إدخال عنوان المهمة واختيار عمود");
+      return;
+    }
+    const payload = {
+      title: String(title),
+      description: String(description || ""),
+      order: 0,
+      columnId: String(columnId),
     };
-
-    dispatch(
-      addTask({
-        boardId: activeBoard.id,
-        columnId,
-        task: newTask,
-      })
-    );
-
-    onClose();
+    console.log("Task payload:", payload);
+    addTaskMutation.mutate(payload);
   };
 
   const addSubtask = () => {

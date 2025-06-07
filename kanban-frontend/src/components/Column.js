@@ -14,7 +14,12 @@ const columnColors = [
   "bg-[#F5D76E]", // yellow
 ];
 
-export default function Column({ column, colorIndex = 0 }) {
+export default function Column({
+  column,
+  colorIndex = 0,
+  activeBoard,
+  columns,
+}) {
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
 
   return (
@@ -56,7 +61,7 @@ export default function Column({ column, colorIndex = 0 }) {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex flex-col gap-5 flex-1"
+            className="flex flex-col gap-5 flex-1 min-h-[120px]"
           >
             {column.tasks.map((task, index) => (
               <Task
@@ -64,6 +69,7 @@ export default function Column({ column, colorIndex = 0 }) {
                 task={task}
                 index={index}
                 columnId={column.id}
+                columns={columns}
               />
             ))}
             {provided.placeholder}
@@ -83,6 +89,8 @@ export default function Column({ column, colorIndex = 0 }) {
         isOpen={isAddTaskModalOpen}
         onClose={() => setIsAddTaskModalOpen(false)}
         columnId={column.id}
+        activeBoard={activeBoard}
+        columns={columns}
       />
     </div>
   );

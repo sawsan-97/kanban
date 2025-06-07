@@ -6,42 +6,33 @@ import { addBoard } from "@/store/boardsSlice";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { boardsApi } from "../api/kanban";
 import { useQueryClient } from "@tanstack/react-query";
+import React from "react";
 
 export default function AddBoardModal({ isOpen, onClose }) {
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const [boardName, setBoardName] = useState("");
-  const [columns, setColumns] = useState(["Todo", "Doing"]);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  React.useEffect(() => {
+    if (isOpen) setBoardName("");
+  }, [isOpen]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!boardName.trim()) {
-      alert("يرجى إدخال اسم اللوحة");
+      alert("Please enter a board name");
       return;
     }
-    boardsApi
-      .create({ name: boardName })
-      .then(() => {
-        queryClient.invalidateQueries(["boards"]);
-        onClose();
-      })
-      .catch(() => {
-        alert("حدث خطأ أثناء إضافة اللوحة");
-      });
-  };
-
-  const addColumn = () => {
-    setColumns([...columns, ""]);
-  };
-
-  const updateColumn = (index, value) => {
-    const newColumns = [...columns];
-    newColumns[index] = value;
-    setColumns(newColumns);
-  };
-
-  const removeColumn = (index) => {
-    setColumns(columns.filter((_, i) => i !== index));
+    setLoading(true);
+    try {
+      await boardsApi.create({ name: boardName });
+      queryClient.invalidateQueries(["boards"]);
+      onClose();
+    } catch (err) {
+      alert("An error occurred while adding the board");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -60,47 +51,16 @@ export default function AddBoardModal({ isOpen, onClose }) {
               value={boardName}
               onChange={(e) => setBoardName(e.target.value)}
               className="w-full p-3 rounded-lg border border-[#3E3F4E] bg-transparent text-white placeholder:text-[#828FA3] focus:outline-none focus:border-[#635FC7] transition mb-4"
-              placeholder="e.g. Web Design"
+              placeholder="e.g. Platform Launch"
               required
             />
-            <label className="block text-sm font-semibold text-white mb-2">
-              Board Columns
-            </label>
-            <div className="flex flex-col gap-3 mb-4">
-              {columns.map((column, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <input
-                    type="text"
-                    value={column}
-                    onChange={(e) => updateColumn(index, e.target.value)}
-                    className="flex-1 p-3 rounded-lg border border-[#3E3F4E] bg-transparent text-white placeholder:text-[#828FA3] focus:outline-none focus:border-[#635FC7] transition"
-                    placeholder="Column name"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeColumn(index)}
-                    className="p-2 hover:bg-[#635FC7]/10 rounded-full"
-                    tabIndex={-1}
-                  >
-                    <XMarkIcon className="h-6 w-6 text-[#828FA3]" />
-                  </button>
-                </div>
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={addColumn}
-              className="w-full py-3 bg-white text-[#635FC7] font-bold rounded-[20px] text-base hover:bg-[#A8A4FF]/30 transition mb-4"
-            >
-              Add New Column +
-            </button>
           </div>
           <button
             type="submit"
             className="w-full py-3 bg-[#635FC7] text-white font-bold rounded-[20px] text-base hover:bg-[#A8A4FF] transition shadow"
+            disabled={loading}
           >
-            Create New Board
+            {loading ? "...Saving" : "Create Board"}
           </button>
         </form>
       </div>

@@ -17,18 +17,17 @@ import { useQuery } from "@tanstack/react-query";
 import { boardsApi } from "../api/kanban";
 import Board from "./Board";
 
-export default function Sidebar() {
+export default function Sidebar({
+  activeBoardId,
+  setActiveBoardId,
+  boardsData,
+}) {
   const dispatch = useDispatch();
   const { boards, activeBoard, isSidebarOpen } = useSelector(
     (state) => state.boards
   );
   const [isAddBoardModalOpen, setIsAddBoardModalOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-  const [activeBoardId, setActiveBoardId] = useState(null);
-  const { data: boardsData = [], isLoading } = useQuery({
-    queryKey: ["boards"],
-    queryFn: () => boardsApi.getAll().then((res) => res.data),
-  });
 
   if (!isSidebarOpen) {
     return (
@@ -64,7 +63,10 @@ export default function Sidebar() {
             {boardsData.map((board) => (
               <div key={board.id} className="flex items-center gap-2">
                 <button
-                  onClick={() => setActiveBoardId(board.id)}
+                  onClick={() => {
+                    setActiveBoardId(board.id);
+                    dispatch(setActiveBoard(board));
+                  }}
                   className={`flex-1 flex items-center gap-3 w-full text-left px-8 py-3 rounded-r-full transition-colors font-medium text-base group ${
                     activeBoardId === board.id
                       ? "bg-[#635FC7] text-white shadow-md"
@@ -125,19 +127,6 @@ export default function Sidebar() {
         isOpen={isAddBoardModalOpen}
         onClose={() => setIsAddBoardModalOpen(false)}
       />
-
-      {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center bg-[#F4F7FD] dark:bg-[#20212C]">
-        {!isLoading && boardsData.length > 0 ? (
-          <Board activeBoardId={activeBoardId} boardsData={boardsData} />
-        ) : (
-          <div className="text-center w-full">
-            <p className="mb-8 text-lg text-[#828FA3] dark:text-[#828FA3] font-medium">
-              This board is empty. Create a new column to get started.
-            </p>
-          </div>
-        )}
-      </div>
     </>
   );
 }
