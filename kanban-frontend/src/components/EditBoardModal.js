@@ -80,62 +80,69 @@ export default function EditBoardModal({ isOpen, onClose, board }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-[#2B2C37] rounded-2xl shadow-2xl w-[480px] max-w-full flex flex-col px-6 pt-8 pb-6">
-        <h2 className="text-2xl font-bold text-white mb-6">تعديل اللوحة</h2>
+      <div
+        className="bg-board-dark rounded-2xl shadow-2xl w-full max-w-md flex flex-col px-6 pt-8 pb-6"
+        dir="rtl"
+      >
+        <h2 className="text-2xl font-bold text-white mb-6 text-right">
+          Edit Board
+        </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 pb-2">
           <div>
-            <label className="block text-sm font-semibold text-white mb-2">
-              اسم اللوحة
+            <label className="block text-sm font-semibold text-white mb-2 text-right">
+              Board Name
             </label>
             <input
               type="text"
               value={boardName}
               onChange={(e) => setBoardName(e.target.value)}
-              className="w-full p-3 rounded-lg border border-[#3E3F4E] bg-transparent text-white placeholder:text-[#828FA3] focus:outline-none focus:border-[#635FC7] transition mb-4"
-              placeholder="مثال: لوحة التصميم"
+              className="w-full p-3 rounded-lg border border-[#20212C] bg-board-dark text-white placeholder:text-[#828FA3] focus:outline-none focus:border-[#635FC7] transition mb-4 text-right"
+              placeholder="e.g. Platform Launch"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-white mb-2">
-              الأعمدة
+            <label className="block text-sm font-semibold text-white mb-2 text-right">
+              Board Columns
             </label>
-            <div className="flex flex-col gap-3 mb-4">
-              {columns.map((col, idx) => (
-                <div key={col.id || idx} className="flex items-center gap-3">
-                  <input
-                    type="text"
-                    value={col.name}
-                    onChange={(e) => updateColumnName(idx, e.target.value)}
-                    className="flex-1 p-3 rounded-lg border border-[#3E3F4E] bg-transparent text-white placeholder:text-[#828FA3] focus:outline-none focus:border-[#635FC7] transition"
-                    placeholder="اسم العمود"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeColumn(idx)}
-                    className="p-2 hover:bg-[#635FC7]/10 rounded-full"
-                    tabIndex={-1}
-                  >
-                    <XMarkIcon className="h-6 w-6 text-[#828FA3]" />
-                  </button>
-                </div>
-              ))}
-            </div>
+            {columns.map((col, idx) => (
+              <div
+                key={col.id || idx}
+                className="flex items-center gap-2 mb-3 flex-row-reverse"
+              >
+                <input
+                  type="text"
+                  value={col.name}
+                  onChange={(e) => updateColumnName(idx, e.target.value)}
+                  className="flex-1 p-3 rounded-lg border border-[#20212C] bg-board-dark text-white placeholder:text-[#828FA3] focus:outline-none focus:border-[#635FC7] transition text-right"
+                  placeholder="Column Name"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => removeColumn(idx)}
+                  className="text-[#828FA3] hover:text-red-500"
+                  tabIndex={-1}
+                  aria-label="Remove column"
+                >
+                  <XMarkIcon className="h-5 w-5" />
+                </button>
+              </div>
+            ))}
             <button
               type="button"
               onClick={addColumn}
-              className="w-full py-3 bg-white text-[#635FC7] font-bold rounded-[20px] text-base hover:bg-[#A8A4FF]/30 transition mb-4"
+              className="w-full py-3 bg-white text-[#635FC7] font-bold rounded-full text-base hover:bg-[#A8A4FF]/20 border-none transition mb-2"
             >
-              + إضافة عمود جديد
+              + Add New Column
             </button>
           </div>
           <button
             type="submit"
-            className="w-full py-3 bg-[#635FC7] text-white font-bold rounded-[20px] text-base hover:bg-[#A8A4FF] transition shadow"
+            className="w-full py-3 bg-[#635FC7] text-white font-bold rounded-full text-base hover:bg-[#A8A4FF] transition shadow mt-2"
             disabled={loading}
           >
-            {loading ? "...جاري الحفظ" : "حفظ التعديلات"}
+            {loading ? "...Saving" : "Save Changes"}
           </button>
         </form>
       </div>

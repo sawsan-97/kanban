@@ -12,16 +12,16 @@ export default function Task({ task, index, columnId, columns }) {
 
   return (
     <>
-      <Draggable draggableId={task.id} index={index}>
+      <Draggable draggableId={String(task.id)} index={index}>
         {(provided) => (
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             onClick={() => setIsViewTaskModalOpen(true)}
-            className="bg-[#2B2C37] rounded-xl shadow-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col gap-2 p-6 min-h-[88px] border border-transparent hover:border-[#635FC7]"
+            className="bg-white dark:bg-[#2B2C37] rounded-xl shadow-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col gap-2 p-3 sm:p-6 min-h-[72px] sm:min-h-[88px] border border-transparent hover:border-[#635FC7] w-full"
           >
-            <h4 className="font-bold text-base text-white mb-1 truncate">
+            <h4 className="font-bold text-base text-[#20212C] dark:text-white mb-1 truncate">
               {task.title}
             </h4>
             {totalSubtasks > 0 && (

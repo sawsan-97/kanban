@@ -103,9 +103,11 @@ export default function EditTaskModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-board-dark rounded-lg p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">Edit Task</h2>
+      <div className="bg-white dark:bg-board-dark rounded-lg p-4 sm:p-6 w-full max-w-xs sm:max-w-md">
+        <div className="flex justify-between items-center mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-xl font-bold text-[#20212C] dark:text-white">
+            Edit Task
+          </h2>
           <button
             onClick={onClose}
             className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
@@ -115,37 +117,41 @@ export default function EditTaskModal({
         </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Title</label>
+            <label className="block text-sm font-medium mb-2 text-[#20212C] dark:text-white">
+              Title
+            </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-board-dark"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-board-dark text-[#20212C] dark:text-white"
               placeholder="e.g. Design the UI"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm font-medium mb-2 text-[#20212C] dark:text-white">
               Description
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-board-dark"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-board-dark text-[#20212C] dark:text-white"
               placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."
               rows="3"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Subtasks</label>
+            <label className="block text-sm font-medium mb-2 text-[#20212C] dark:text-white">
+              Subtasks
+            </label>
             {subtasks.map((subtask, index) => (
               <div key={subtask.id || index} className="flex gap-2 mb-2">
                 <input
                   type="text"
                   value={subtask.title}
                   onChange={(e) => updateSubtask(index, e.target.value)}
-                  className="flex-1 p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-board-dark"
+                  className="flex-1 p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-board-dark text-[#20212C] dark:text-white"
                   placeholder="e.g. Design homepage"
                   required
                 />
@@ -169,9 +175,11 @@ export default function EditTaskModal({
             </button>
           </div>
           <div className="mb-6">
-            <label className="block text-sm font-medium mb-2">Status</label>
+            <label className="block text-sm font-medium mb-2 text-[#20212C] dark:text-white">
+              Status
+            </label>
             <select
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-board-dark"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-board-dark text-[#20212C] dark:text-white"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               required
@@ -188,7 +196,7 @@ export default function EditTaskModal({
           </div>
           <button
             type="submit"
-            className="w-full p-2 bg-primary text-white rounded-lg hover:bg-primary-light"
+            className="w-full p-2 bg-primary text-white rounded-lg hover:bg-primary-light dark:bg-primary dark:hover:bg-primary/80"
             disabled={loading}
           >
             {loading ? "...Saving" : "Save Changes"}

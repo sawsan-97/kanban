@@ -58,7 +58,7 @@ export default function ViewTaskModal({
     if (!isOpen) return null;
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-[#2B2C37] rounded-2xl shadow-2xl w-[480px] max-w-full flex flex-col px-6 pt-8 pb-6">
+        <div className="bg-white dark:bg-board-dark rounded-2xl shadow-2xl w-[480px] max-w-full flex flex-col px-6 pt-8 pb-6">
           <h2 className="text-2xl font-bold text-red-500 mb-6">
             Delete this task?
           </h2>

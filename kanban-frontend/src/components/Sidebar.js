@@ -44,7 +44,7 @@ export default function Sidebar({
   return (
     <>
       <aside
-        className="w-72 h-screen flex flex-col justify-between fixed left-0 top-0 z-40 shadow-xl bg-[#F4F7FD] dark:bg-[#20212C] border-r border-[#E4EBFA] dark:border-[#3E3F4E]"
+        className="w-72 h-screen flex flex-col justify-between fixed left-0 top-0 z-40 shadow-xl bg-[#F4F7FD] dark:bg-[#20212C] border-r border-[#E4EBFA] dark:border-[#3E3F4E] hidden sm:flex"
         dir="ltr"
       >
         <div>
